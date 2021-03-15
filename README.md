@@ -7,7 +7,7 @@ Install
 pip3 install git+https://github.com/storykube/sentence-tokenizer.git
 ```
 
-Import the package, instance, set and finally get.
+Import the package, instance it, set and finally get.
 ```python
 #!/usr/bin/python3
 
