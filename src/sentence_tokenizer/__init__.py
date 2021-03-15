@@ -6,7 +6,8 @@ from nltk.corpus import gutenberg
 from nltk.corpus import webtext
 from nltk.tokenize.punkt import PunktSentenceTokenizer, PunktTrainer
 from nltk.corpus import stopwords
-from src.sentence_tokenizer.abbrevs import Abbrevs
+from .abbrevs import Abbrevs
+from functools import lru_cache
 import string
 
 
