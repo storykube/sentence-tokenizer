@@ -4,7 +4,7 @@ Split the article text in sentences, following basic syntactic and grammar rules
 ## Usage
 Install
 ```bash
-pip3 install git+https://github.com/storykube/sentence_tokenizer.git
+pip3 install git+https://github.com/storykube/sentence-tokenizer.git
 ```
 
 Import the package, instance, set and finally get.
