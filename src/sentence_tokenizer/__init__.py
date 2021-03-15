@@ -53,14 +53,15 @@ class StaticSentenceTokenizerInstance:
 
 class SentenceTokenizer:
     """
-    The Storykube Sentente Tokenizer. It Wrap the segtok segmenter, and improve the logic behind it
-    keeping in mind all the basic grammar rules from English 
+    The Storykube Sentente Tokenizer. 
+    It Wrap the segtok segmenter, and improve the logic behind it
+    keeping in mind some of English basic syntactic and grammar rules.
     """
 
-    DOT_REPLACE = "((1))"
-    ASK_REPLACE = "((2))"
-    EXC_REPLACE = "((3))"
-    DOT_DOT_REPLACE = "((4))"
+    DOT_REPLACE         = "[[[.]]]"
+    ASK_REPLACE         = "[[[?]]]"
+    EXC_REPLACE         = "[[[!]]]"
+    DOT_DOT_REPLACE     = "[[[...]]]"
 
     def __init__(self):
 
@@ -117,7 +118,7 @@ class SentenceTokenizer:
         # tokenizer on quotes. For example:
         # "Exhale and out." Mindfulness practices
         # -> could become a wrong tokenized sentences: '"Exhale and out.', '"Mindfulness practices"
-        # (with the quotes on the next sentence.
+        # (with quotes on the next sentence).
         quotes_sentences = re.finditer(r"\“(.+?)\”", self.text)
         for q in quotes_sentences:
             q = str(q.group(0))

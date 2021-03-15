@@ -1,5 +1,5 @@
-# Storykube Sentence Tokenizer
-Split the article text in sentences, following basic syntactic and grammar rules from English Language.
+# Sentence Tokenizer
+Sentence tokenization is the process of splitting text into individual sentences. 
 
 ## Usage
 Install
@@ -17,3 +17,6 @@ s = SentenceTokenizer()
 s.set('...') # long text
 sentences = s.get()
 ```
+
+The first run of the Storykube SentenceTokenizer, just after the import - I mean, the first occurence -
+can be very slow, because it must initialize and train the PunktSentenceTokenizer.
