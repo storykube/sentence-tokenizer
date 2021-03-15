@@ -5,6 +5,9 @@ Sentence tokenization is the process of splitting text into individual sentences
 
 This Sentence Tokenizer can be used when preparing or augmenting data to train, or to process a long article by handling it as a simple group of sentences.
 
+**Pay Attention**. The code is NOT in a stable version. Moreover there are several ways to improve it, and the SentenceTokenizer it should be considered as a draft, at the moment. \
+Having said that, don't use it in production.
+
 ## Usage
 First of all, install it from github.
 
