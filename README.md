@@ -12,7 +12,8 @@ Import the package, instance, set and finally get.
 #!/usr/bin/python3
 
 from sentence_tokenizer import SentenceTokenizer
+
 s = SentenceTokenizer()
-s.set('..')
+s.set('...') # long text
 sentences = s.get()
 ```
