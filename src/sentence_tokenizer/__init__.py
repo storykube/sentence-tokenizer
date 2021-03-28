@@ -1,14 +1,15 @@
 #!/usr/bin/python3
 
 import re
-import nltk
-from nltk.corpus import gutenberg
-from nltk.corpus import webtext
-from nltk.tokenize.punkt import PunktSentenceTokenizer, PunktTrainer
-from nltk.corpus import stopwords
-from .abbrevs import Abbrevs
-from functools import lru_cache
 import string
+from functools import lru_cache
+
+import nltk
+from nltk.corpus import gutenberg, stopwords, webtext
+from nltk.tokenize.punkt import PunktSentenceTokenizer, PunktTrainer
+from sumy.nlp.tokenizers import Tokenizer
+
+from .abbrevs import Abbrevs
 
 
 class SingletonSentenceTokenizerContainer:
@@ -58,10 +59,10 @@ class SentenceTokenizer:
     keeping in mind some of English basic syntactic and grammar rules.
     """
 
-    DOT_REPLACE         = "[[[.]]]"
-    ASK_REPLACE         = "[[[?]]]"
-    EXC_REPLACE         = "[[[!]]]"
-    DOT_DOT_REPLACE     = "[[[...]]]"
+    DOT_REPLACE = "[[[.]]]"
+    ASK_REPLACE = "[[[?]]]"
+    EXC_REPLACE = "[[[!]]]"
+    DOT_DOT_REPLACE = "[[[...]]]"
 
     def __init__(self):
 
@@ -168,3 +169,16 @@ class SentenceTokenizer:
         SingletonSentenceTokenizerContainer.cache[self.text] = result
 
         return result
+
+    # these two methods will be used from the sumy package (mixer)
+
+    @staticmethod
+    def to_sentences(text):
+        st = SentenceTokenizer()
+        st.set(text)
+        return st.get()
+
+    @staticmethod
+    def to_words(text):
+        t = Tokenizer("english")
+        return t.to_words(sentence=text)
