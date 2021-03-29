@@ -59,10 +59,10 @@ class SentenceTokenizer:
     keeping in mind some of English basic syntactic and grammar rules.
     """
 
-    DOT_REPLACE = "[[[.]]]"
-    ASK_REPLACE = "[[[?]]]"
-    EXC_REPLACE = "[[[!]]]"
-    DOT_DOT_REPLACE = "[[[...]]]"
+    DOT_REPLACE = "[[[1]]]"
+    ASK_REPLACE = "[[[2]]]"
+    EXC_REPLACE = "[[[3]]]"
+    DOT_DOT_REPLACE = "[[[4]]]"
 
     def __init__(self):
 
