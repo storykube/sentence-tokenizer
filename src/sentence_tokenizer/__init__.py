@@ -78,7 +78,7 @@ class SentenceTokenizer:
 
         return self
 
-    def get(self) -> list:
+    def get(self, protect=True) -> list:
 
         def protect_chars_between_quotes(text):
             text = text.replace('“', '"')
@@ -129,10 +129,13 @@ class SentenceTokenizer:
                 self.text = self.text.replace(f'{q}.”', f'{q}”. ')
 
         # Now, tokenize it.
-        protected_text = protect_chars_between_quotes(self.text)
+        if protect:
+            protected_text = protect_chars_between_quotes(self.text)
+        else:
+            protected_text = text
+
         # logger.info(protected_text)
-        sentences = SingletonSentenceTokenizerContainer.tokenizer.tokenize(
-            protected_text)
+        sentences = SingletonSentenceTokenizerContainer.tokenizer.tokenize(protected_text)
 
         # Trying to fix misunderstanding about abbreviations
         # For example: if we have u.s.a. followed by a stopwords, probably is a new sentence,
