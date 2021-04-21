@@ -132,7 +132,7 @@ class SentenceTokenizer:
         if protect:
             protected_text = protect_chars_between_quotes(self.text)
         else:
-            protected_text = text
+            protected_text = self.text
 
         # logger.info(protected_text)
         sentences = SingletonSentenceTokenizerContainer.tokenizer.tokenize(protected_text)
