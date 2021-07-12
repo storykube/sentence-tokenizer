@@ -6,7 +6,7 @@ class Abbrevs:
             'rev', 'dem', 'adm', 'dr', 'arc', 'u.s', 'u.s.a', 'u.k',
             'p.m', 'a.m', 'mr', 'mrs', 'ms', 'co', 'vs', 'corp', 'no',
             ' n', 'u.n', 'jan', 'feb', 'mar', 'apr', 'jun', 'jul',
-            'ago', 'sept', 'sep', 'oct', 'nov', 'dec'
+            'ago', 'sept', 'sep', 'oct', 'nov', 'dec', 's'
         ]
     
     def get(self) -> list:
