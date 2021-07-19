@@ -32,7 +32,7 @@ setuptools.setup(
     ],
     install_requires=[
         'nltk',
-        'sumy==0.8.1'
+        'spacy'
     ],
     package_dir={"": "src"},
     packages=setuptools.find_packages(where="src"),

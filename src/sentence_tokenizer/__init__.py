@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-
+import spacy
 import re
 import string
 from functools import lru_cache
@@ -13,7 +13,7 @@ from .abbrevs import Abbrevs
 
 
 class SingletonSentenceTokenizerContainer:
-    tokenizer = False
+    nlp_model = None
     cache = {}
 
 
@@ -24,39 +24,13 @@ class StaticSentenceTokenizerInstance:
     @staticmethod
     def initialize_static():
 
-        abbrevsClass = Abbrevs()
-        abbrevs = abbrevsClass.get()
-
-        input_text = ""
-        for file_id in gutenberg.fileids():
-            input_text += gutenberg.raw(file_id)
-
-        for file_id in webtext.fileids():
-            input_text += webtext.raw(file_id)
-
-        trainer = PunktTrainer(verbose=False)
-        trainer.INCLUDE_ALL_COLLOCS = True
-        trainer.INCLUDE_ABBREV_COLLOCS = True
-        trainer.train(input_text, verbose=False)
-        SingletonSentenceTokenizerContainer.tokenizer = PunktSentenceTokenizer(
-            trainer.get_params(), verbose=False)
-
-        for abbrev in abbrevs:
-            SingletonSentenceTokenizerContainer.tokenizer.\
-                _params.abbrev_types.add(abbrev)
-
-        alphabet = list(string.ascii_lowercase)
-        SingletonSentenceTokenizerContainer.tokenizer._params.abbrev_types.update(
-            alphabet)
-
+        SingletonSentenceTokenizerContainer.nlp_model = spacy.load('en_core_web_sm')
         StaticSentenceTokenizerInstance.flag = True
 
 
 class SentenceTokenizer:
     """
-    The Storykube Sentente Tokenizer. 
-    It Wrap the segtok segmenter, and improve the logic behind it
-    keeping in mind some of English basic syntactic and grammar rules.
+    The Storykube Sentence Tokenizer.
     """
 
     DOT_REPLACE = "[[[1]]]"
@@ -64,10 +38,10 @@ class SentenceTokenizer:
     EXC_REPLACE = "[[[3]]]"
     DOT_DOT_REPLACE = "[[[4]]]"
 
+
     def __init__(self):
 
         self.text = ""
-        self.stop_words = set(stopwords.words('english'))
 
         if not StaticSentenceTokenizerInstance.flag:
             StaticSentenceTokenizerInstance.initialize_static()
@@ -115,58 +89,14 @@ class SentenceTokenizer:
         if self.text in SingletonSentenceTokenizerContainer.cache.keys():
             return SingletonSentenceTokenizerContainer.cache[self.text]
 
-        # That is important to avoid all the problems regarding the sentence
-        # tokenizer on quotes. For example:
-        # "Exhale and out." Mindfulness practices
-        # -> could become a wrong tokenized sentences: '"Exhale and out.', '"Mindfulness practices"
-        # (with quotes on the next sentence).
-        quotes_sentences = re.finditer(r"\“(.+?)\”", self.text)
-        for q in quotes_sentences:
-            q = str(q.group(0))
+        text = protect_chars_between_quotes(self.text)
 
-            if q.endswith('.”'):
-                q = str(q).replace('.”', '')
-                self.text = self.text.replace(f'{q}.”', f'{q}”. ')
+        tokens = SingletonSentenceTokenizerContainer.nlp_model(text)
 
-        # Now, tokenize it.
-        if protect:
-            protected_text = protect_chars_between_quotes(self.text)
-        else:
-            protected_text = self.text
-
-        # logger.info(protected_text)
-        sentences = SingletonSentenceTokenizerContainer.tokenizer.tokenize(protected_text)
-
-        # Trying to fix misunderstanding about abbreviations
-        # For example: if we have u.s.a. followed by a stopwords, probably is a new sentence,
-        # so, trying to split and push them separately.
         result = []
-        sentence_sep_fix = '~)N(~'
-        for sent in sentences:
-            # logger.info(sent)
-            if '. ' in sent:
-                how_many_dot = sent.count('. ')
-                for i in range(1, how_many_dot):
-                    words_after_dot = sent.split('. ')[i].strip()
-                    word_after_dot = words_after_dot.split(' ')[0].strip()
-                    # logger.info("[Sentence-Tokenizer-Fix] The word immediately after dot: " + word_after_dot)
-                    # logger.info("[Sentence-Tokenizer-Fix] The first letter after dot: " + word_after_dot[0])
-                    if word_after_dot.lower() in self.stop_words \
-                            and word_after_dot.lower() not in ['and', 'or'] \
-                            and word_after_dot[0].isupper():
-                        # logger.info(f'[Sentence-Tokenizer-Fix] Found: {word_after_dot}')
-                        # keep the space after the sent replace, to avoid confusion (an != and)
-                        sent = sent.replace(
-                            f'. {word_after_dot} ', f'. {sentence_sep_fix}{word_after_dot} ')
 
-                if sentence_sep_fix in sent:
-                    split_sentences = sent.split(sentence_sep_fix)
-                    for single_part in split_sentences:
-                        result.append(single_part.strip())
-                else:
-                    result.append(restore_protected_chars(sent))
-            else:
-                result.append(restore_protected_chars(sent))
+        for sent in tokens.sents:
+            result.append(restore_protected_chars(str(sent).strip()))
 
         # Saving in the cache
         SingletonSentenceTokenizerContainer.cache[self.text] = result
