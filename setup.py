@@ -32,7 +32,8 @@ setuptools.setup(
     ],
     install_requires=[
         'nltk',
-        'spacy'
+        'spacy',
+        'langdetect'
     ],
     package_dir={"": "src"},
     packages=setuptools.find_packages(where="src"),
