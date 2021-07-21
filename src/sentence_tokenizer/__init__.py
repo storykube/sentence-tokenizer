@@ -41,10 +41,10 @@ class SentenceTokenizer:
     The Storykube Sentence Tokenizer.
     """
 
-    DOT_REPLACE = "[[[1]]]"
-    ASK_REPLACE = "[[[2]]]"
-    EXC_REPLACE = "[[[3]]]"
-    DOT_DOT_REPLACE = "[[[4]]]"
+    DOT_REPLACE = "~~1~~"
+    ASK_REPLACE = "~~2~~"
+    EXC_REPLACE = "~~3~~"
+    DOT_DOT_REPLACE = "~~4~~"
 
     def __init__(self):
 
