@@ -16,7 +16,7 @@ def installNLTKDependencies():
 
 setuptools.setup(
     name="sentence_tokenizer",
-    version="0.0.5",
+    version="0.0.6",
     author="Ottavio Fogliata",
     author_email="ottavio.fogliata@storykube.com",
     description='Storykube Sentence Tokenizer. It splits the article text in sentences, following basic syntactic and '
