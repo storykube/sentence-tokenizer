@@ -36,6 +36,7 @@ class SingletonSentenceTokenizerContainer:
     def __init__(self):
         pass
 
+
 class SentenceTokenizer:
     """
     The Storykube Sentence Tokenizer.
@@ -45,6 +46,7 @@ class SentenceTokenizer:
     ASK_REPLACE = "~~2~~"
     EXC_REPLACE = "~~3~~"
     DOT_DOT_REPLACE = "~~4~~"
+    COLON_REPLACE = "~~5~~"
 
     def __init__(self):
 
@@ -56,38 +58,46 @@ class SentenceTokenizer:
 
         return self
 
-    def get(self, protect=True) -> list:
+    def get(self) -> list:
 
-        def protect_chars_between_quotes(text):
-            text = text.replace('“', '"')
-            text = text.replace('”', '"')
-            text = re.sub(
-                r'\.\.\.(?!(?:[^"]*"[^"]*")*[^"]*$)', SentenceTokenizer.DOT_DOT_REPLACE, text)
-            text = re.sub(r'\.(?!(?:[^"]*"[^"]*")*[^"]*$)',
-                          SentenceTokenizer.DOT_REPLACE, text)
-            text = re.sub(r'\?(?!(?:[^"]*"[^"]*")*[^"]*$)',
-                          SentenceTokenizer.ASK_REPLACE, text)
-            text = re.sub(r'\!(?!(?:[^"]*"[^"]*")*[^"]*$)',
-                          SentenceTokenizer.EXC_REPLACE, text)
-            return text
+        def protect_chars_between_quotes(text_str):
+            text_str = text_str.replace('“', '"')
+            text_str = text_str.replace('”', '"')
+            text_str = re.sub(
+                r'\.\.\.(?!(?:[^"]*"[^"]*")*[^"]*$)', SentenceTokenizer.DOT_DOT_REPLACE, text_str)
 
-        def restore_protected_chars(text):
-            text = text.replace(SentenceTokenizer.DOT_DOT_REPLACE, "...")
-            text = text.replace(SentenceTokenizer.DOT_REPLACE, ".")
-            text = text.replace(SentenceTokenizer.ASK_REPLACE, "?")
-            text = text.replace(SentenceTokenizer.EXC_REPLACE, "!")
+            text_str = re.sub(r'\.(?!(?:[^"]*"[^"]*")*[^"]*$)',
+                              SentenceTokenizer.DOT_REPLACE, text_str)
+
+            text_str = re.sub(r'\?(?!(?:[^"]*"[^"]*")*[^"]*$)',
+                              SentenceTokenizer.ASK_REPLACE, text_str)
+
+            text_str = re.sub(r'\!(?!(?:[^"]*"[^"]*")*[^"]*$)',
+                              SentenceTokenizer.EXC_REPLACE, text_str)
+
+            text_str = re.sub(r'\:(?!(?:[^"]*"[^"]*")*[^"]*$)',
+                              SentenceTokenizer.COLON_REPLACE, text_str)
+
+            return text_str
+
+        def restore_protected_chars(text_str):
+            text_str = text_str.replace(SentenceTokenizer.DOT_DOT_REPLACE, "...")
+            text_str = text_str.replace(SentenceTokenizer.DOT_REPLACE, ".")
+            text_str = text_str.replace(SentenceTokenizer.ASK_REPLACE, "?")
+            text_str = text_str.replace(SentenceTokenizer.EXC_REPLACE, "!")
+            text_str = text_str.replace(SentenceTokenizer.COLON_REPLACE, ":")
 
             # restore doubled quotes
-            text = re.sub(r'(^|\s)\"', " “", text)
-            text = re.sub(r'\"\s', "” ", text)
-            text = re.sub(r'\"\.', "”.", text)
-            text = re.sub(r'\"\,', "”,", text)
-            text = re.sub(r'\"\-', "”-", text)
-            text = re.sub(r'\"\s\-', "” -", text)
-            text = re.sub(r'\"$', "”", text)
-            text = text.replace('"', '“')  # latest tentative, classic replace.
+            text_str = re.sub(r'(^|\s)\"', " “", text_str)
+            text_str = re.sub(r'\"\s', "” ", text_str)
+            text_str = re.sub(r'\"\.', "”.", text_str)
+            text_str = re.sub(r'\"\,', "”,", text_str)
+            text_str = re.sub(r'\"\-', "”-", text_str)
+            text_str = re.sub(r'\"\s\-', "” -", text_str)
+            text_str = re.sub(r'\"$', "”", text_str)
+            text_str = text_str.replace('"', '“')  # latest tentative, classic replace.
 
-            return text
+            return text_str
 
         lang_code = detect(self.text)
 
