@@ -4,9 +4,9 @@ class Abbrevs:
         self.collection = [
             'gov', 'msc' 'pres', 'sen', 'prof', 'inc', 'rep', 'reps',
             'rev', 'dem', 'adm', 'dr', 'arc', 'u.s', 'u.s.a', 'u.k',
-            'p.m', 'a.m', 'mr', 'mrs', 'ms', 'co', 'vs', 'corp', 'no',
-            ' n', 'u.n', 'jan', 'feb', 'mar', 'apr', 'jun', 'jul',
-            'ago', 'sept', 'sep', 'oct', 'nov', 'dec', 's'
+            'p.m', 'a.m', 'mr', 'mrs', 'ms', 'co', 'vs', 'corp',
+            'u.n', 'jan', 'feb', 'mar', 'apr', 'jun', 'jul',
+            'sept', 'sep', 'oct', 'nov', 'dec'
         ]
     
     def get(self) -> list:
