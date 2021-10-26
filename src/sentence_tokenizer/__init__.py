@@ -2,7 +2,6 @@
 import spacy
 import re
 import string
-from functools import lru_cache
 
 import nltk
 from nltk.corpus import gutenberg, stopwords, webtext
@@ -31,7 +30,6 @@ class SpacyStatic:
 
 class SingletonSentenceTokenizerContainer:
     nlp_model = None
-    cache = {}
 
     def __init__(self):
         pass
@@ -110,10 +108,6 @@ class SentenceTokenizer:
             SpacyStatic.NLP_MEM[lang_code] = \
                 spacy.load(SpacyStatic.MAP[lang_code])
 
-        # Get result from the cache:
-        if self.text in SingletonSentenceTokenizerContainer.cache.keys():
-            return SingletonSentenceTokenizerContainer.cache[self.text]
-
         text = protect_chars_between_quotes(self.text)
 
         tokens = SpacyStatic.NLP_MEM[lang_code](text)
@@ -122,9 +116,6 @@ class SentenceTokenizer:
 
         for sent in tokens.sents:
             result.append(restore_protected_chars(str(sent).strip()))
-
-        # Saving in the cache
-        SingletonSentenceTokenizerContainer.cache[self.text] = result
 
         return result
 
