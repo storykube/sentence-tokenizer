@@ -32,10 +32,10 @@ class SentenceTokenizer:
     def get(self) -> list:
 
         lang = detect(self.text[:128])
-        print('===============> ' + lang)
+
         if lang not in supported_language:
             lang = 'en'
-            
+
         seg = pysbd.Segmenter(language=lang, clean=False)
 
         return seg.segment(self.text)
