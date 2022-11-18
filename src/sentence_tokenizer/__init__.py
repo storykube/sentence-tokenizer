@@ -7,6 +7,8 @@ import pysbd
 from langdetect import detect
 
 
+supported_language = [ 'hy', 'fr', 'en', 'mr', 'ur', 'hi', 'ar', 'nl', 'am', 'da', 'sk', 'ja', 'it', 'fa', 'ru', 'el', 'bg', 'de', 'es', 'my', 'zh', 'pl', 'kk' ]
+
 class SingletonSentenceTokenizerContainer:
     nlp_model = None
 
@@ -28,7 +30,14 @@ class SentenceTokenizer:
         return self
 
     def get(self) -> list:
-        seg = pysbd.Segmenter(language=detect(self.text[:256]), clean=False)
+
+        lang = detect(self.text[:128])
+        print('===============> ' + lang)
+        if lang not in supported_language:
+            lang = 'en'
+            
+        seg = pysbd.Segmenter(language=lang, clean=False)
+
         return seg.segment(self.text)
 
     # these two methods will be used from the sumy package (mixer)
